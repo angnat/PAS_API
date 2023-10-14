@@ -10,5 +10,6 @@ namespace PAS_API.Data
 
         }
         public DbSet<Unit> tblM_Unit { get; set; }
+        public DbSet<TUnit> tblT_Unit { get; set; }
     }
 }

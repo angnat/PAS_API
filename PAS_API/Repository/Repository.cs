@@ -22,7 +22,7 @@ namespace PAS_API.Repository
         }
 
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true)
+        public async Task<T> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true, Expression<Func<T, bool>>? order = null)
         {
 
             IQueryable<T> query = dbSet;
@@ -33,11 +33,10 @@ namespace PAS_API.Repository
             if (filter != null)
             {
                 query = query.Where(filter);
+                    
             }
-            return await query.FirstOrDefaultAsync();
+            return await query.OrderBy(order).LastOrDefaultAsync();
         }
-
-
 
         public async Task RemoveAsync(T entity)
         {
