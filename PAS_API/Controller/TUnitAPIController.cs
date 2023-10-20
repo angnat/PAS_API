@@ -37,7 +37,7 @@ namespace PAS_API.Controller
                 }            
 
                 //var unit = await _dbUnit.GetAsync(u => u.MaterialIDSAP == UnitID);
-                var unit = await _dbUnit.GetAsync(u => u.MaterialIDSAP == UnitID );
+                var unit = await _dbUnit.GetAsync(u => u.MaterialIDSAP == UnitID, true , order: x => x.ID);
                // var orderedUnit = unit.OrderByDescending(u => u.PropertyToOrderBy).ToList();
 
                 if (unit == null)

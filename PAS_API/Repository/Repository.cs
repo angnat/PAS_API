@@ -21,10 +21,8 @@ namespace PAS_API.Repository
             await SaveAsync();
         }
 
-
-        public async Task<T> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true, Expression<Func<T, bool>>? order = null)
+        public async Task<T> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true, Expression<Func<T, object>>? order = null)
         {
-
             IQueryable<T> query = dbSet;
             if (!tracked)
             {
@@ -33,11 +31,14 @@ namespace PAS_API.Repository
             if (filter != null)
             {
                 query = query.Where(filter);
-                    
             }
-            return await query.OrderBy(order).LastOrDefaultAsync();
+            if (order != null)
+            {
+                query = query.OrderByDescending(order);
+            }
+            return await query.FirstOrDefaultAsync();
         }
-
+     
         public async Task RemoveAsync(T entity)
         {
             dbSet.Remove(entity);
@@ -57,6 +58,6 @@ namespace PAS_API.Repository
                 query = query.Where(filter);
             }
             return await query.ToListAsync();
-        }
+        }      
     }
 }
