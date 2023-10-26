@@ -9,7 +9,10 @@ namespace PAS_API.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int64? ID
         { get; set; }
+        [ForeignKey("Unit")]
         public Int64? FUnit
+        { get; set; }
+        public Unit Unit
         { get; set; }
         public Int64? FIDCluster
         { get; set; }

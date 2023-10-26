@@ -74,6 +74,8 @@
         { get; set; }
         public DateTime? TglAdendumPPJB
         { get; set; }
+        public UnitDTO Unit
+        { get; set; }
 
     }
 }
