@@ -11,13 +11,15 @@ namespace PAS_API.Controller
     public class TUnitAPIController : ControllerBase
     {
         protected APIResponse _response;
-        private readonly ITUnitRepository _dbUnit;
+        private readonly ITUnitRepository _db_T_Unit;
+        private readonly IUnitRepository _dbUnit;
         private readonly IMapper _mapper;
-        public TUnitAPIController(ITUnitRepository dbUnit, IMapper mapper)
+        public TUnitAPIController(ITUnitRepository db_T_Unit, IMapper mapper,IUnitRepository dbUnit)
         {
-            _dbUnit = dbUnit;
+            _db_T_Unit = db_T_Unit;
             _mapper = mapper;
             this._response = new();
+            _dbUnit = dbUnit;
         }
 
 
@@ -37,7 +39,7 @@ namespace PAS_API.Controller
                 }            
 
                 //var unit = await _dbUnit.GetAsync(u => u.MaterialIDSAP == UnitID);
-                var unit = await _dbUnit.GetAsync(u => u.MaterialIDSAP == UnitID, true , order: x => x.ID);
+                var unit = await _db_T_Unit.GetAsync(u => u.MaterialIDSAP == UnitID, true , order: x => x.ID);
                // var orderedUnit = unit.OrderByDescending(u => u.PropertyToOrderBy).ToList();
 
                 if (unit == null)
