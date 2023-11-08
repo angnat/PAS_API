@@ -37,11 +37,9 @@ namespace PAS_API.Controller
                     _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }            
-
-                //var unit = await _dbUnit.GetAsync(u => u.MaterialIDSAP == UnitID);
-                var unit = await _db_T_Unit.GetAsync(u => u.MaterialIDSAP == UnitID, true , order: x => x.ID);
-               // var orderedUnit = unit.OrderByDescending(u => u.PropertyToOrderBy).ToList();
-
+             
+                var unit = await _db_T_Unit.GetAsync(u => u.MaterialIDSAP == UnitID, true , order: u => u.ID);
+             
                 if (unit == null)
                 {
                     _response.StatusCode = System.Net.HttpStatusCode.NotFound;
