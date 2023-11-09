@@ -21,7 +21,7 @@ namespace PAS_API.Repository
             await SaveAsync();
         }
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true, Expression<Func<T, object>>? order = null)
+        public async Task<T> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true, Expression<Func<T, object>>? order = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (!tracked)
@@ -35,6 +35,13 @@ namespace PAS_API.Repository
             if (order != null)
             {
                 query = query.OrderByDescending(order);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
             }
             return await query.FirstOrDefaultAsync();
         }
@@ -50,12 +57,19 @@ namespace PAS_API.Repository
             await _db.SaveChangesAsync();
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
             }
             return await query.ToListAsync();
         }      

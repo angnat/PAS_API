@@ -38,7 +38,7 @@ namespace PAS_API.Controller
                     return BadRequest(_response);
                 }            
              
-                var unit = await _db_T_Unit.GetAsync(u => u.MaterialIDSAP == UnitID, true , order: u => u.ID);
+                var unit = await _db_T_Unit.GetAsync(u => u.MaterialIDSAP == UnitID, true , order: u => u.ID, includeProperties : "Unit");
              
                 if (unit == null)
                 {
