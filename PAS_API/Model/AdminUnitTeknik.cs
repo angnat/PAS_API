@@ -1,12 +1,20 @@
-﻿namespace PAS_API.Model.DTO
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PAS_API.Model
 {
-    public class AdminUnitTeknikDTO
+    public class AdminUnitTeknik
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int64? ID
         { get; set; }
         public string? IDKontraktor
         { get; set; }
         public Int64? FIDAdminUnit
+        { get; set; }
+        [ForeignKey("FIDAdminUnit")]
+        public Unit Unit
         { get; set; }
         public string? NamaKontraktor
         { get; set; }
@@ -64,7 +72,19 @@
         { get; set; }
         public DateTime? TglSPK
         { get; set; }
-        public UnitDTO? Unit
+        public string? CreatedBy
+        { get; set; }
+        public DateTime? CreatedDate
+        { get; set; }
+        public string ?CreatedHost
+        { get; set; }
+        public string? ModifiedBy
+        { get; set; }
+        public DateTime? ModifiedDate
+        { get; set; }
+        public string? ModifiedHost
+        { get; set; }
+        public string? HistoryData
         { get; set; }
     }
 }

@@ -13,6 +13,8 @@ namespace PAS_API
 
             CreateMap<TUnit, TUnitDTO>().ReverseMap();
 
+            CreateMap<AdminUnitTeknik, AdminUnitTeknikDTO>().ReverseMap();
+
             //CreateMap<Villa, VillaCreateDto>().ReverseMap();
             //CreateMap<Villa, VillaUpdateDto>().ReverseMap();
         }
