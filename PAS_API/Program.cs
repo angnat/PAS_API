@@ -14,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(option => {
 builder.Services.AddScoped<IUnitRepository, UnitRepository>();
 builder.Services.AddScoped<ITUnitRepository, TUnitRepository>();
 builder.Services.AddScoped<IAdminUnitTeknikRepository, AdminUnitTeknikRepository>();
+builder.Services.AddScoped<IProgressRepository, ProgressRepository>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddControllers(option => {
     //option.ReturnHttpNotAcceptable = true;
@@ -23,8 +24,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+/*Untuk di Prod
 builder.WebHost.UseUrls("http://0.0.0.0:5001/");
-//builder.WebHost.UseIISIntegration();
+*/
+builder.WebHost.UseIISIntegration();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
