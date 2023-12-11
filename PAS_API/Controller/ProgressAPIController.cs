@@ -52,5 +52,66 @@ namespace PAS_API.Controller
             }
             return _response;
         }
+
+        [HttpPost]    
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<APIResponse>> InsertZMPROG([FromBody] CreateProgressDTO createDTO)
+        {
+            try
+            {
+                var existingProgress = await _db_Progress.GetAsync(u => u.UnitID.ToLower() == createDTO.UnitID.ToLower());
+                if (existingProgress != null)
+                {
+                    // If the progress with the same UnitID exists, update the existing progress
+                    return await UpdateProgress(existingProgress.UnitID, createDTO);
+                }
+                if (createDTO == null) return BadRequest(createDTO);
+               
+                Progress progress = _mapper.Map<Progress>(createDTO);
+          
+                await _db_Progress.CreateAsync(progress);
+                _response.Result = _mapper.Map<ProgressDTO>(progress);
+                _response.StatusCode = System.Net.HttpStatusCode.Created;
+                _response.IsSuccess = true;
+
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorsMessage = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut("{string}", Name = "UpdateProgress")]       
+        public async Task<ActionResult<APIResponse>> UpdateProgress(string unitid, [FromBody] CreateProgressDTO updateDTO)
+        {
+            try
+            {
+                if (updateDTO == null || unitid != updateDTO.UnitID)
+                {
+                    return BadRequest();
+                }
+                Progress progress = _mapper.Map<Progress>(updateDTO);
+                // var progress = await _db_Progress.GetAsync(u => u.UnitID == unitid);
+
+                _db_Progress.UpdateAsync(progress);
+                _response.Result = _mapper.Map<CreateProgressDTO>(progress);
+                _response.StatusCode = System.Net.HttpStatusCode.NoContent;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorsMessage = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
     }
 }
