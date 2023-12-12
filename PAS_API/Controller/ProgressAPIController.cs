@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using PAS_API.Model;
 using PAS_API.Model.DTO;
@@ -65,14 +66,18 @@ namespace PAS_API.Controller
                 if (existingProgress != null)
                 {
                     // If the progress with the same UnitID exists, update the existing progress
-                    return await UpdateProgress(existingProgress.UnitID, createDTO);
+                    _mapper.Map(createDTO, existingProgress); // Update the existing progress with the new values
+                    await _db_Progress.UpdateAsync(existingProgress);
+                    _response.Result = _mapper.Map<ProgressDTO>(existingProgress);
                 }
-                if (createDTO == null) return BadRequest(createDTO);
-               
-                Progress progress = _mapper.Map<Progress>(createDTO);
-          
-                await _db_Progress.CreateAsync(progress);
-                _response.Result = _mapper.Map<ProgressDTO>(progress);
+                else
+                {
+                    if (createDTO == null) return BadRequest(createDTO);
+                    Progress progress = _mapper.Map<Progress>(createDTO);
+                    await _db_Progress.CreateAsync(progress);
+                    _response.Result = _mapper.Map<ProgressDTO>(progress);
+                }
+
                 _response.StatusCode = System.Net.HttpStatusCode.Created;
                 _response.IsSuccess = true;
 
@@ -111,6 +116,39 @@ namespace PAS_API.Controller
                 _response.ErrorsMessage = new List<string>() { ex.ToString() };
             }
             return _response;
+        }       
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPatch("{string}", Name = "UpdatePartialProgress")]
+        public async Task<IActionResult> UpdatePartialProgress(string unitid, JsonPatchDocument<CreateProgressDTO> patchDTO)
+        {
+            if (patchDTO == null)
+            {
+                return BadRequest();
+            }
+            //var villa = await _db.Villas.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            var progress = await _db_Progress.GetAsync(u => u.UnitID == unitid);
+            if (progress == null)
+            {
+                return BadRequest();
+            }
+            CreateProgressDTO progressDTO = _mapper.Map<CreateProgressDTO>(progress);
+
+            patchDTO.ApplyTo(progressDTO, ModelState);
+            Progress model = _mapper.Map<Progress>(progressDTO);
+
+            _db_Progress.UpdateAsync(model);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return NoContent();
+            }
+
         }
 
     }
