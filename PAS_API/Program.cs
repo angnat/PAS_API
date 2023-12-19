@@ -27,7 +27,12 @@ builder.Services.AddSwaggerGen();
 /*Untuk di Prod
 builder.WebHost.UseUrls("http://0.0.0.0:5001/");
 */
+
+/* Untuk DEV jalan swagger UI 
+
+*/
 builder.WebHost.UseIISIntegration();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

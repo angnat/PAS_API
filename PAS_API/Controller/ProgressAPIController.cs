@@ -54,30 +54,34 @@ namespace PAS_API.Controller
             return _response;
         }
 
-        [HttpPost]    
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<APIResponse>> InsertZMPROG([FromBody] CreateProgressDTO createDTO)
+        public async Task<ActionResult<APIResponse>> InsertZMPROG([FromBody] CreateProgressDTO[] createDTO)
         {
             try
             {
-                var existingProgress = await _db_Progress.GetAsync(u => u.UnitID.ToLower() == createDTO.UnitID.ToLower());
-                if (existingProgress != null)
+                for(int i = 0; i < createDTO.Length; i++)
                 {
-                    // If the progress with the same UnitID exists, update the existing progress
-                    _mapper.Map(createDTO, existingProgress); // Update the existing progress with the new values
-                    await _db_Progress.UpdateAsync(existingProgress);
-                    _response.Result = _mapper.Map<ProgressDTO>(existingProgress);
+                    var existingProgress = await _db_Progress.GetAsync(u => u.UnitID.ToLower() == createDTO[i].UnitID.ToLower());
+                    if (existingProgress != null)
+                    {
+                        // If the progress with the same UnitID exists, update the existing progress
+                        _mapper.Map(createDTO[i], existingProgress); // Update the existing progress with the new values
+                        await _db_Progress.UpdateAsync(existingProgress);
+                        //_response.Result = _mapper.Map<ProgressDTO>(existingProgress);
+                    }
+                    else
+                    {
+                        if (createDTO == null) return BadRequest(createDTO[i]);
+                        Progress progress = _mapper.Map<Progress>(createDTO[i]);
+                        await _db_Progress.CreateAsync(progress);
+                        //_response.Result = _mapper.Map<ProgressDTO>(progress);
+                    }
                 }
-                else
-                {
-                    if (createDTO == null) return BadRequest(createDTO);
-                    Progress progress = _mapper.Map<Progress>(createDTO);
-                    await _db_Progress.CreateAsync(progress);
-                    _response.Result = _mapper.Map<ProgressDTO>(progress);
-                }
-
+               
                 _response.StatusCode = System.Net.HttpStatusCode.Created;
                 _response.IsSuccess = true;
 
