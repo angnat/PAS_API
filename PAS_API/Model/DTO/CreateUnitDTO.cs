@@ -1,15 +1,13 @@
 ﻿namespace PAS_API.Model.DTO
 {
-    public class UnitDTO
+    public class CreateUnitDTO
     {
-        public Int64? ID
-        { get; set; }
         public string? UnitID
         { get; set; }
         public string? UnitIDOld
         { get; set; }
         public Int64? FIDCluster
-        { get; set; }     
+        { get; set; }
         public string? UnitDescription
         { get; set; }
         public string? Block
@@ -52,29 +50,29 @@
         { get; set; }
         public string? Floor
         { get; set; }
-        public string MaterialNumber
+        public string? MaterialNumber
         { get; set; }
         public string? DayaListrik
         { get; set; }
-        public decimal LuasNett
+        public decimal? LuasNett
         { get; set; }
         public string? NoPUPR
         { get; set; }
-        public string SLoc
+        public string? SLoc
         { get; set; }
-        public string SLocDescription
+        public string? SLocDescription
         { get; set; }
-        public string CreatedBy
+        public string? CreatedBy
         { get; set; }
         public DateTime? CreatedDate
         { get; set; }
-        public string CreatedHost
+        public string? CreatedHost
         { get; set; }
-        public string ModifiedBy
+        public string? ModifiedBy
         { get; set; }
         public DateTime? ModifiedDate
         { get; set; }
-        public string ModifiedHost
+        public string? ModifiedHost
         { get; set; }
         public string? HistoryData
         { get; set; }

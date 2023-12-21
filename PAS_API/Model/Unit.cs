@@ -14,9 +14,7 @@ namespace PAS_API.Model
         public string UnitIDOld
         { get; set; }       
         public Int64 FIDCluster
-        { get; set; }
-        //public string ClusterCode
-        //{ get; set; }
+        { get; set; }        
         public string? UnitDescription
         { get; set; }
         public string? Block
