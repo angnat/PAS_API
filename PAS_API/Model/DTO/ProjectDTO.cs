@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace PAS_API.Model
+﻿namespace PAS_API.Model.DTO
 {
-    public class Project
+    public class ProjectDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int64? ID
         { get; set; }
         public Int64? FIDDivision

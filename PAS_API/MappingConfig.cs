@@ -17,6 +17,8 @@ namespace PAS_API
             CreateMap<Progress, ProgressDTO>().ReverseMap();
             CreateMap<Progress, CreateProgressDTO>().ReverseMap();
             CreateMap<Unit, CreateUnitDTO>().ReverseMap();
+            CreateMap<Cluster, ClusterDTO>().ReverseMap();
+            CreateMap<Project, ProjectDTO>().ReverseMap();
             //CreateMap<Villa, VillaCreateDto>().ReverseMap();
             //CreateMap<Villa, VillaUpdateDto>().ReverseMap();
         }

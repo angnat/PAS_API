@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace PAS_API.Model
+﻿namespace PAS_API.Model.DTO
 {
-    public class Cluster
+    public class ClusterDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int64? ID
         { get; set; }
         public Int64? FIDProject

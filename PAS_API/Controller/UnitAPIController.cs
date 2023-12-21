@@ -13,13 +13,17 @@ namespace PAS_API.Controller
     {
         protected APIResponse _response;
         private readonly IUnitRepository _dbUnit;
+        private readonly IClusterRepository _dbCluster;
+        private readonly IProjectRepository _dbProject;
         private readonly IMapper _mapper;
 
-        public UnitAPIController(IUnitRepository dbUnit, IMapper mapper)
+        public UnitAPIController(IUnitRepository dbUnit, IMapper mapper, IClusterRepository dbCluster, IProjectRepository dbProject)
         {
             _dbUnit = dbUnit;
             _mapper = mapper;
             this._response = new();
+            _dbCluster = dbCluster;
+            _dbProject = dbProject;
         }
 
         [HttpGet]
@@ -116,26 +120,36 @@ namespace PAS_API.Controller
             return _response;
         }
 
-        //public int FindCluster(string ProjectCode)
-        //{
-        //    List<Project> proj = new ProjectBL().Select(string.Format("{0} like '%{1}%'", Project.Columns.PROJECTCODE, project), Project.Columns.PROJECTCODE);
-        //    if (proj.Count == 0)
-        //    {
-        //        ("return " + project + "not found. Create Project").AppendLog(m_lstLog);
-        //        Project projectItem = new Project();
-        //        projectItem.FIDDivision = intDiv;
-        //        projectItem.ProjectCode = BA_code;
-        //        projectItem.ProjectName = BA_desc;
-        //        result = new ProjectBL().Insert(projectItem);
+        public async Task<long?> FindCluster(string ProjectCode, string ProjectDescription,string SLoc, string ClusterName)
+        {
+            var existingProject = await _dbProject.GetAsync(u => u.ProjectCode.ToLower() == ProjectCode);
 
-        //        // The rest of the logic for inserting a Cluster goes here
-        //    }
-        //    else
-        //    {
-        //        // The logic for handling an existing project goes here
-        //    }
+            if (existingProject == null)
+            {
+                // Create a new project
+                var newProject = new Project
+                {
+                    FIDDivision = 530,
+                    ProjectCode = ProjectCode,
+                    ProjectName = ProjectDescription
+                };
+                await _dbProject.CreateAsync(newProject);
 
-        //    return 0;
-        //}
+                var newCluster = new Cluster
+                {
+                    FIDProject = newProject.ID,
+                    SLoc = SLoc,
+                    ClusterName = ClusterName
+                };
+
+                return newCluster.ID;
+            }
+            else
+            {
+                // Update the existing project              
+                return existingProject.ID;
+            }
+        }
+
     }
 }
