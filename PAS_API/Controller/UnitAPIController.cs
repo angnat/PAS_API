@@ -21,14 +21,14 @@ namespace PAS_API.Controller
         {
             _dbUnit = dbUnit;
             _mapper = mapper;
-            this._response = new();
             _dbCluster = dbCluster;
             _dbProject = dbProject;
+            this._response = new();
         }
 
         [HttpGet]
         public async Task<ActionResult<APIResponse>> GetUnit()
-        {     
+        {
             try
             {
                 IEnumerable<Unit> unitList = await _dbUnit.GetAllAsync();
@@ -42,7 +42,7 @@ namespace PAS_API.Controller
                 _response.ErrorsMessage = new List<string>() { ex.ToString() };
             }
             return _response;
-        }        
+        }
 
         [HttpGet("{UnitID}", Name = "GetUnit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -94,16 +94,54 @@ namespace PAS_API.Controller
                         // If the progress with the same UnitID exists, update the existing progress
                         // Modify the FIDCluster in the existingUnit object                  
                         _mapper.Map(createDTO[i], existingUnit); // Update the existing progress with the new values
-                        existingUnit.FIDCluster = 51; // Update the FIDCluster value
+                        //existingUnit.FIDCluster = 51; // Update the FIDCluster value
+
+                        var existingProject = await _dbProject.GetAsync(u => u.ProjectCode.ToLower() == existingUnit.BACode);
+
+                        if (existingProject == null)
+                        {
+                            // Create a new project
+                            var newProject = new Project
+                            {
+                                FIDDivision = 530,
+                                ProjectCode = existingUnit.BACode,
+                                ProjectName = existingUnit.BADesc
+                            };
+                            await _dbProject.CreateAsync(newProject);
+
+                            var newCluster = new Cluster
+                            {
+                                FIDProject = newProject.ID,
+                                SLoc = existingUnit.SLoc,
+                                ClusterName = existingUnit.SLocDescription
+                            };
+
+                            await _dbCluster.CreateAsync(newCluster);
+                        }
+                        else
+                        {
+                            long? projID = existingProject.ID;
+                            //projectnya ada maka dia akan insert clusternya , cek dulu Clusternya   
+
+                            var existingCluster = await _dbCluster.GetAsync(u => u.FIDProject == projID);
+                            var newCluster = new Cluster
+                            {
+                                FIDProject = projID,
+                                SLoc = existingUnit.SLoc,
+                                ClusterName = existingUnit.SLocDescription
+                            };
+
+                            await _dbCluster.CreateAsync(newCluster);
+                            existingUnit.FIDCluster = newCluster.ID;// Update the FIDCluster value                            
+                        }
+
                         await _dbUnit.UpdateAsync(existingUnit);
-                        //_response.Result = _mapper.Map<ProgressDTO>(existingProgress);
                     }
                     else
                     {
                         if (createDTO == null) return BadRequest(createDTO[i]);
                         Unit unit = _mapper.Map<Unit>(createDTO[i]);
                         await _dbUnit.CreateAsync(unit);
-                        //_response.Result = _mapper.Map<ProgressDTO>(progress);
                     }
                 }
 
@@ -118,37 +156,6 @@ namespace PAS_API.Controller
                 _response.ErrorsMessage = new List<string>() { ex.ToString() };
             }
             return _response;
-        }
-
-        public async Task<long?> FindCluster(string ProjectCode, string ProjectDescription,string SLoc, string ClusterName)
-        {
-            var existingProject = await _dbProject.GetAsync(u => u.ProjectCode.ToLower() == ProjectCode);
-
-            if (existingProject == null)
-            {
-                // Create a new project
-                var newProject = new Project
-                {
-                    FIDDivision = 530,
-                    ProjectCode = ProjectCode,
-                    ProjectName = ProjectDescription
-                };
-                await _dbProject.CreateAsync(newProject);
-
-                var newCluster = new Cluster
-                {
-                    FIDProject = newProject.ID,
-                    SLoc = SLoc,
-                    ClusterName = ClusterName
-                };
-
-                return newCluster.ID;
-            }
-            else
-            {
-                // Update the existing project              
-                return existingProject.ID;
-            }
         }
 
     }

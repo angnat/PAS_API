@@ -7,13 +7,13 @@ namespace PAS_API.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Int64 ID
+        public Int64? ID
         { get; set; }       
-        public string UnitID
+        public string? UnitID
         { get; set; }
-        public string UnitIDOld
+        public string? UnitIDOld
         { get; set; }       
-        public Int64 FIDCluster
+        public Int64? FIDCluster
         { get; set; }        
         public string? UnitDescription
         { get; set; }
