@@ -17,6 +17,10 @@ builder.Services.AddScoped<IAdminUnitTeknikRepository, AdminUnitTeknikRepository
 builder.Services.AddScoped<IProgressRepository, ProgressRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IClusterRepository, ClusterRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerAddressRepository, CustomerAddressRepository>();
+builder.Services.AddScoped<ICustomerCommunicationRepository, CustomerCommunicationRepository>();
+
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddControllers(option => {
     //option.ReturnHttpNotAcceptable = true;

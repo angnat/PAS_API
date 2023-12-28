@@ -15,5 +15,8 @@ namespace PAS_API.Data
         public DbSet<Progress> tblM_Progress { get; set; }
         public DbSet<Project> tblM_Project { get; set; }
         public DbSet<Cluster> tblM_Cluster { get; set; }
+        public DbSet<Customer> tblM_Customer { get; set; }
+        public DbSet<CustomerAddress> tblT_CustomerAddress { get; set; }
+        public DbSet<CustomerCommunication> tblT_CustomerCommunication { get; set; }
     }
 }

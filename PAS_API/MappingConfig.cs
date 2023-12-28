@@ -19,8 +19,9 @@ namespace PAS_API
             CreateMap<Unit, CreateUnitDTO>().ReverseMap();
             CreateMap<Cluster, ClusterDTO>().ReverseMap();
             CreateMap<Project, ProjectDTO>().ReverseMap();
-            //CreateMap<Villa, VillaCreateDto>().ReverseMap();
-            //CreateMap<Villa, VillaUpdateDto>().ReverseMap();
+            CreateMap<Customer, CreateCustomerDTO>().ReverseMap();
+            CreateMap<CustomerAddress, CreateCustomerAddressDTO>().ReverseMap();
+            CreateMap<CustomerCommunication, CreateCustomerCommunicationDTO>().ReverseMap();
         }
     }
 }
