@@ -38,8 +38,7 @@ namespace PAS_API.Controller
                     var exsistingCustomer = await _db_Customer.GetAsync(u => u.CustomerID.ToLower() == createDTO[i].CustomerID.ToLower());
                     if (exsistingCustomer != null)
                     {
-                        // If the progress with the same UnitID exists, update the existing progress
-                        // Modify the FIDCluster in the existingUnit object                  
+                        // Update Customer                           
                         _mapper.Map(createDTO[i], exsistingCustomer); // Update the existing progress with the new values
                         
 
@@ -94,56 +93,52 @@ namespace PAS_API.Controller
                         }
                         await _db_Customer.CreateAsync(customer);
 
-                        if (!string.IsNullOrEmpty(createDTO[i].AlamatSurat ))
-                        {
-                            //var newCustomerAddress = new CustomerAddress
-                            //{
-                            //    FIDAddressType = 2,
-                            //    Street = createDTO[i].AlamatSurat,
-                            //    FIDCustomer = customer.ID
-                            //};
+                        if (!string.IsNullOrEmpty(createDTO[i].AlamatSurat))
+                        {                          
                             List<CustomerAddress> customerAddresses = new List<CustomerAddress>();
-                            CustomerAddress alamatSurat = new CustomerAddress{   
-                                FIDAddressType = 2,    
-                                Street = createDTO[i].AlamatSurat,    
+                            CustomerAddress alamatSurat = new CustomerAddress
+                            {
+                                FIDAddressType = 2,
+                                Street = createDTO[i].AlamatSurat,
                                 FIDCustomer = customer.ID
                             };
                             customerAddresses.Add(alamatSurat);
-                            CustomerAddress alamatKTP = new CustomerAddress{    
-                                FIDAddressType = 1,   
-                                Street = createDTO[i].Alamat,    
+                            CustomerAddress alamatKTP = new CustomerAddress
+                            {
+                                FIDAddressType = 3,
+                                Street = createDTO[i].Alamat,
                                 FIDCustomer = customer.ID
                             };
                             customerAddresses.Add(alamatKTP);
-                          
-                            for(int j=0;j< customerAddresses.Count; j++)
+
+                            for (int j = 0; j < customerAddresses.Count; j++)
                             {
                                 CustomerAddress customerAddress = _mapper.Map<CustomerAddress>(customerAddresses[j]);
                                 await _db_CustomerAddress.CreateAsync(customerAddresses[j]);
                             }
+                        }
 
-                            List<CustomerCommunication> lstCustomerCommunication = new List<CustomerCommunication>();
-                            CustomerCommunication noHp = new CustomerCommunication
-                            {
-                                FIDCommunicationType = 1,
-                                FIDCommunicationInfo = createDTO[i].CellPhoneNumber,
-                                FIDCustomer = customer.ID
-                            };
-                            lstCustomerCommunication.Add(noHp);
-                            CustomerCommunication notelp = new CustomerCommunication
-                            {
-                                FIDCommunicationType = 2,
-                                FIDCommunicationInfo = createDTO[i].PhoneNumber,
-                                FIDCustomer = customer.ID
-                            };
-                            lstCustomerCommunication.Add(notelp);
+                        List<CustomerCommunication> lstCustomerCommunication = new List<CustomerCommunication>();
+                        CustomerCommunication noHp = new CustomerCommunication
+                        {
+                            FIDCommunicationType = 1,
+                            FIDCommunicationInfo = createDTO[i].CellPhoneNumber,
+                            FIDCustomer = customer.ID
+                        };
+                        lstCustomerCommunication.Add(noHp);
+                        CustomerCommunication notelp = new CustomerCommunication
+                        {
+                            FIDCommunicationType = 2,
+                            FIDCommunicationInfo = createDTO[i].PhoneNumber,
+                            FIDCustomer = customer.ID
+                        };
+                        lstCustomerCommunication.Add(notelp);
 
-                            for (int k = 0; k < lstCustomerCommunication.Count; k++)
-                            {
-                                CustomerCommunication customerCommunication = _mapper.Map<CustomerCommunication>(lstCustomerCommunication[k]);
-                                await _db_CustomerCommunication.CreateAsync(lstCustomerCommunication[k]);
-                            }
-                        }                        
+                        for (int k = 0; k < lstCustomerCommunication.Count; k++)
+                        {
+                            CustomerCommunication customerCommunication = _mapper.Map<CustomerCommunication>(lstCustomerCommunication[k]);
+                            await _db_CustomerCommunication.CreateAsync(lstCustomerCommunication[k]);
+                        }
                     }
                 }
 
