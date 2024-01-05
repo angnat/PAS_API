@@ -35,53 +35,95 @@ namespace PAS_API.Controller
             {
                 for (int i = 0; i < createDTO.Length; i++)
                 {
+                    /* Update Customer */
+                    var customerDTO = createDTO[i];                  
                     var exsistingCustomer = await _db_Customer.GetAsync(u => u.CustomerID.ToLower() == createDTO[i].CustomerID.ToLower());
                     if (exsistingCustomer != null)
                     {
                         // Update Customer                           
-                        _mapper.Map(createDTO[i], exsistingCustomer); // Update the existing progress with the new values
-                        
-
-                        //var existingProject = await _dbProject.GetAsync(u => u.ProjectCode.ToLower() == exsistingCustomer.BACode);
-
-                        //if (existingProject == null)
-                        //{
-                        //    // Create a new project
-                        //    var newProject = new Project
-                        //    {
-                        //        FIDDivision = 530,
-                        //        ProjectCode = exsistingCustomer.BACode,
-                        //        ProjectName = exsistingCustomer.BADesc
-                        //    };
-                        //    await _dbProject.CreateAsync(newProject);
-
-                        //    var newCluster = new Cluster
-                        //    {
-                        //        FIDProject = newProject.ID,
-                        //        SLoc = exsistingCustomer.SLoc,
-                        //        ClusterName = exsistingCustomer.SLocDescription
-                        //    };
-
-                        //    await _dbCluster.CreateAsync(newCluster);
-                        //}
-                        //else
-                        //{
-                        //    long? projID = existingProject.ID;
-                        //    //projectnya ada maka dia akan insert clusternya , cek dulu Clusternya   
-
-                        //    var existingCluster = await _dbCluster.GetAsync(u => u.FIDProject == projID);
-                        //    var newCluster = new Cluster
-                        //    {
-                        //        FIDProject = projID,
-                        //        SLoc = exsistingCustomer.SLoc,
-                        //        ClusterName = exsistingCustomer.SLocDescription
-                        //    };
-
-                        //    await _dbCluster.CreateAsync(newCluster);
-                        //    exsistingCustomer.FIDCluster = newCluster.ID;// Update the FIDCluster value                            
-                        //}
-
+                        _mapper.Map(customerDTO, exsistingCustomer); // Update the existing customer with the new values                                            
                         await _db_Customer.UpdateAsync(exsistingCustomer);
+
+                        List<CustomerAddress> customerAddresses = new List<CustomerAddress>();
+                        var exsistingAlamatKTP = await _db_CustomerAddress.GetAsync(u => u.FIDCustomer == exsistingCustomer.ID && u.FIDAddressType == "3");
+                        var exsistingAlamatSurat = await _db_CustomerAddress.GetAsync(u => u.FIDCustomer == exsistingCustomer.ID && u.FIDAddressType == "2");
+
+                        var exsistingNoHP = await _db_CustomerCommunication.GetAsync(u => u.FIDCustomer == exsistingCustomer.ID && u.FIDCommunicationType == 1);
+                        var exsistingNoTelp = await _db_CustomerCommunication.GetAsync(u => u.FIDCustomer == exsistingCustomer.ID && u.FIDCommunicationType == 2);
+
+                        CustomerAddress alamatKTP = new CustomerAddress
+                        {
+                            FIDAddressType = "3",
+                            Street = createDTO[i].Alamat,
+                            FIDCustomer = exsistingCustomer.ID
+                        };
+                        customerAddresses.Add(alamatKTP);
+                        CustomerAddress alamatSurat = new CustomerAddress
+                        {
+                            FIDAddressType = "2",
+                            Street = createDTO[i].AlamatSurat,
+                            FIDCustomer = exsistingCustomer.ID
+                        };
+                        customerAddresses.Add(alamatSurat);
+
+                        CustomerAddress customerAddress = _mapper.Map<CustomerAddress>(customerAddresses.Find(u => u.FIDAddressType == "3"));
+                        if (exsistingAlamatKTP == null)
+                        {                            
+                            await _db_CustomerAddress.CreateAsync(customerAddresses.Find(u => u.FIDAddressType == "3"));
+                        }
+                        else
+                        {
+                            await _db_CustomerAddress.UpdateAsync(customerAddresses.Find(u => u.FIDAddressType == "3"));
+                        }
+                        
+                        CustomerAddress customerAddressLetter = _mapper.Map<CustomerAddress>(customerAddresses.Find(u => u.FIDAddressType == "2"));
+                        if (exsistingAlamatSurat == null)
+                        {
+                            await _db_CustomerAddress.CreateAsync(customerAddresses.Find(u => u.FIDAddressType == "2"));
+                        }
+                        else
+                        {
+                            await _db_CustomerAddress.UpdateAsync(customerAddresses.Find(u => u.FIDAddressType == "2"));
+                        }
+
+                        List<CustomerCommunication> lstCustomerCommunication = new List<CustomerCommunication>();
+                        CustomerCommunication noHp = new CustomerCommunication
+                        {
+                            FIDCommunicationType = 1,
+                            FIDCommunicationInfo = createDTO[i].CellPhoneNumber,
+                            FIDCustomer = exsistingCustomer.ID
+                        };
+                        lstCustomerCommunication.Add(noHp);
+                        CustomerCommunication notelp = new CustomerCommunication
+                        {
+                            FIDCommunicationType = 2,
+                            FIDCommunicationInfo = createDTO[i].PhoneNumber,
+                            FIDCustomer = exsistingCustomer.ID
+                        };
+                        lstCustomerCommunication.Add(notelp);
+
+                        if(exsistingNoHP ==  null)
+                        {
+                            await _db_CustomerCommunication.CreateAsync(lstCustomerCommunication.Find(u => u.FIDCommunicationType == 1));
+                        }
+                        else
+                        {
+                            await _db_CustomerCommunication.UpdateAsync(lstCustomerCommunication.Find(u => u.FIDCommunicationType == 1));
+                        }
+
+                        if(exsistingNoTelp ==  null)
+                        {
+                            await _db_CustomerCommunication.CreateAsync(lstCustomerCommunication.Find(u => u.FIDCommunicationType == 2));
+                        }
+                        else
+                        {
+                            await _db_CustomerCommunication.UpdateAsync(lstCustomerCommunication.Find(u => u.FIDCommunicationType == 2));
+                        }
+
+                        _response.StatusCode = System.Net.HttpStatusCode.Created;
+                        _response.IsSuccess = true;
+
+                        return Ok(_response);
                     }
                     else
                     {
@@ -98,14 +140,14 @@ namespace PAS_API.Controller
                             List<CustomerAddress> customerAddresses = new List<CustomerAddress>();
                             CustomerAddress alamatSurat = new CustomerAddress
                             {
-                                FIDAddressType = 2,
+                                FIDAddressType = "2",
                                 Street = createDTO[i].AlamatSurat,
                                 FIDCustomer = customer.ID
                             };
                             customerAddresses.Add(alamatSurat);
                             CustomerAddress alamatKTP = new CustomerAddress
                             {
-                                FIDAddressType = 3,
+                                FIDAddressType = "3",
                                 Street = createDTO[i].Alamat,
                                 FIDCustomer = customer.ID
                             };
@@ -153,6 +195,43 @@ namespace PAS_API.Controller
                 _response.ErrorsMessage = new List<string>() { ex.ToString() };
             }
             return _response;
+        }
+
+        private string SplitAlamat(string Alamat)
+        {
+            // string alamat = "PERUM CITRA NIRWANA NO.A-14 RT.004 RW.059 SINDUADI, MLATI KABUPATEN SLEMAN DAERAH ISTIMEWA YOGYAKARTA dan DE LATINOS CLUSTER CENTRO HAVANA BLOK M.11/0";
+            string addressLine1 = "";
+            string addressLine2 = "";
+
+            string street = Alamat.Substring(0, Alamat.Length >= 60 ? 60 : Alamat.Length);
+            if (Alamat.Length > 60 && !Alamat.Substring(60).StartsWith(" "))
+                street = street.Substring(0, street.LastIndexOf(" ") + 1);
+
+            int tot1 = street.Length;
+            if (Alamat.Length >= tot1 + 40)
+            {
+                addressLine1 = Alamat.Substring(tot1, 40);
+                if (Alamat.Length > tot1 + 40 && !Alamat.Substring(tot1 + 40).StartsWith(" "))
+                    addressLine1 = addressLine1.Substring(0, addressLine1.LastIndexOf(" ") + 1);
+
+                int tot2 = street.Length + addressLine1.Length;
+                if (Alamat.Length >= tot2 + 40)
+                {
+                    addressLine2 = Alamat.Substring(tot2, 40);
+                    if (Alamat.Length > tot2 + 40 && !Alamat.Substring(tot2 + 40).StartsWith(" "))
+                        addressLine2 = addressLine2.Substring(0, addressLine2.LastIndexOf(" ") + 1);
+                }
+                else
+                    addressLine2 = Alamat.Substring(tot2);
+            }
+            else
+                addressLine1 = Alamat.Substring(tot1);
+
+            street = street.Trim();
+            addressLine1 = addressLine1.Trim();
+            addressLine2 = addressLine2.Trim();
+
+            return street + ";" + addressLine1 + ";" + addressLine2;
         }
     }
 }

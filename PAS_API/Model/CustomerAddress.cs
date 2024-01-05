@@ -11,7 +11,7 @@ namespace PAS_API.Model
         { get; set; }
         public Int64? FIDCustomer
         { get; set; }
-        public Int64? FIDAddressType
+        public string FIDAddressType
         { get; set; }
         public string? City
         { get; set; }

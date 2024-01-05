@@ -31,7 +31,7 @@ namespace PAS_API.Model
         { get; set; }
         public string? NPWP
         { get; set; }
-        public int? FReligionID
+        public Int64? FReligionID
         { get; set; }
         public string? DeputyName
         { get; set; }
