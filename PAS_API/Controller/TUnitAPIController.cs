@@ -66,6 +66,12 @@ namespace PAS_API.Controller
         {
             try
             {
+                if (createDTO == null)
+                {
+                    _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
                 for (int i = 0; i < createDTO.Length; i++)
                 {
 

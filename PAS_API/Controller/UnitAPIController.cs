@@ -86,6 +86,11 @@ namespace PAS_API.Controller
         {
             try
             {
+                if (createDTO == null)
+                {                   
+                    _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
                 for (int i = 0; i < createDTO.Length; i++)
                 {
                     var existingUnit = await _dbUnit.GetAsync(u => u.UnitID.ToLower() == createDTO[i].UnitID.ToLower());
@@ -139,7 +144,7 @@ namespace PAS_API.Controller
                     }
                     else
                     {
-                        if (createDTO == null) return BadRequest(createDTO[i]);
+                        if (createDTO == null) return BadRequest();
                         Unit unit = _mapper.Map<Unit>(createDTO[i]);
                         await _dbUnit.CreateAsync(unit);
                     }

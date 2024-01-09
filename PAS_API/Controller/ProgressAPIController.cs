@@ -63,7 +63,8 @@ namespace PAS_API.Controller
         {
             try
             {
-                for(int i = 0; i < createDTO.Length; i++)
+                if (createDTO == null) return BadRequest();
+                for (int i = 0; i < createDTO.Length; i++)
                 {
                     var existingProgress = await _db_Progress.GetAsync(u => u.UnitID.ToLower() == createDTO[i].UnitID.ToLower());
                     if (existingProgress != null)
@@ -74,8 +75,7 @@ namespace PAS_API.Controller
                         //_response.Result = _mapper.Map<ProgressDTO>(existingProgress);
                     }
                     else
-                    {
-                        if (createDTO == null) return BadRequest(createDTO[i]);
+                    {                      
                         Progress progress = _mapper.Map<Progress>(createDTO[i]);
                         await _db_Progress.CreateAsync(progress);
                         //_response.Result = _mapper.Map<ProgressDTO>(progress);
