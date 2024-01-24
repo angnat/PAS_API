@@ -22,6 +22,7 @@ namespace PAS_API
             CreateMap<Customer, CreateCustomerDTO>().ReverseMap();
             CreateMap<CustomerAddress, CreateCustomerAddressDTO>().ReverseMap();
             CreateMap<CustomerCommunication, CreateCustomerCommunicationDTO>().ReverseMap();
+            CreateMap<AdminUnitTeknikSilver, AdminUnitTeknikSilverDTO>().ReverseMap();
         }
     }
 }
