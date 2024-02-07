@@ -74,6 +74,10 @@
         { get; set; }
         public DateTime? TglAdendumPPJB
         { get; set; }
+        public Decimal SubsidiDP
+        { get; set; }
+        public string? WithFurniture
+        { get; set; }
         public UnitDTO? Unit
         { get; set; }
     }

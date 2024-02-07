@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PAS_API.Repository.IRepository;
 using PAS_API.Repository;
 using PAS_API;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(option => {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
+
+//List<string> lstAllowedOrigins = new List<string>();
+//string allowedOrigins = System.Configuration.GetValue<string>("AllowedOrigins");
+//lstAllowedOrigins.Add(allowedOrigins.Split(";", StringSplitOptions.RemoveEmptyEntries));
+
+
+//CorsPolicyBuilder corsPolicyBuilder = new CorsPolicyBuilder();
+//corsPolicyBuilder.AllowAnyHeader();
+//corsPolicyBuilder.AllowAnyMethod();
+//corsPolicyBuilder.WithOrigins(lst)
+
 builder.Services.AddScoped<IUnitRepository, UnitRepository>();
 builder.Services.AddScoped<ITUnitRepository, TUnitRepository>();
 builder.Services.AddScoped<IAdminUnitTeknikRepository, AdminUnitTeknikRepository>();
@@ -21,6 +33,7 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerAddressRepository, CustomerAddressRepository>();
 builder.Services.AddScoped<ICustomerCommunicationRepository, CustomerCommunicationRepository>();
 builder.Services.AddScoped<IAdminUnitTeknikSilverRepository, AdminUnitTeknikSilverRepository>();
+builder.Services.AddScoped<IAdminUnitPengalihanListHutangRepository, AdminUnitPengalihanListHutangRepository>();
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddControllers(option => {
@@ -32,11 +45,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 /*Untuk di Prod
-builder.WebHost.UseUrls("http://0.0.0.0:5001/");
+
 */
 
 /* Untuk DEV jalan swagger UI 
-
+builder.WebHost.UseUrls("http://0.0.0.0:5001/");
 */
 builder.WebHost.UseIISIntegration();
 

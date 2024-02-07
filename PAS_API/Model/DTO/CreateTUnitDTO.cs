@@ -69,8 +69,12 @@
         public string? PromoCode
         { get; set; }
         public string? NoAdendumPPJB
-        { get; set; }
+        { get; set; }      
         public DateTime? TglAdendumPPJB
+        { get; set; }
+        public Decimal SubsidiDP
+        { get; set; }
+        public string? WithFurniture
         { get; set; }
     }
 }

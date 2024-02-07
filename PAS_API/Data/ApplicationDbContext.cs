@@ -12,6 +12,7 @@ namespace PAS_API.Data
         public DbSet<Unit> tblM_Unit { get; set; }
         public DbSet<TUnit> tblT_Unit { get; set; }
         public DbSet<AdminUnitTeknik> tblT_AdminUnitTeknik { get; set; }
+        public DbSet<AdminUnitPengalihanListHutang> tblT_AdminUnitPengalihanListHutang { get; set; }
         public DbSet<AdminUnitTeknikSilver> tblT_AdminUnitTeknik_Silver { get; set; }
         public DbSet<Progress> tblM_Progress { get; set; }
         public DbSet<Project> tblM_Project { get; set; }
