@@ -13,15 +13,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(option => {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
 
-//List<string> lstAllowedOrigins = new List<string>();
-//string allowedOrigins = System.Configuration.GetValue<string>("AllowedOrigins");
-//lstAllowedOrigins.Add(allowedOrigins.Split(";", StringSplitOptions.RemoveEmptyEntries));
-
-
-//CorsPolicyBuilder corsPolicyBuilder = new CorsPolicyBuilder();
-//corsPolicyBuilder.AllowAnyHeader();
-//corsPolicyBuilder.AllowAnyMethod();
-//corsPolicyBuilder.WithOrigins(lst)
 
 builder.Services.AddScoped<IUnitRepository, UnitRepository>();
 builder.Services.AddScoped<ITUnitRepository, TUnitRepository>();
@@ -45,13 +36,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 /*Untuk di Prod
-
-*/
-
-/* Untuk DEV jalan swagger UI 
 builder.WebHost.UseUrls("http://0.0.0.0:5001/");
 */
+
+
+/* Untuk DEV jalan swagger UI 
+
+*/
 builder.WebHost.UseIISIntegration();
+
 
 var app = builder.Build();
 
@@ -61,6 +54,7 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 //}
+//app.UseCors("SiteCorsPolicy");
 
 app.UseHttpsRedirection();
 
