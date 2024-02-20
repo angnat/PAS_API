@@ -42,8 +42,8 @@ namespace PAS_API.Controller
                         if (existingProgress != null)
                         {
                             // If the progress with the same UnitID exists, update the existing progress
-                            existingProgress.FIDPengalihan = pengalihan.ID;
-                            existingProgress.AdminUnitID = pengalihan.FIDAdminUnit;
+                            createDTO[i].FIDPengalihan = pengalihan.ID;
+                            createDTO[i].AdminUnitID = pengalihan.FIDAdminUnit;
                             _mapper.Map(createDTO[i], existingProgress); // Update the existing progress with the new values
                             await _db_T_AdminUnitListHutang.UpdateAsync(existingProgress);
                         }
