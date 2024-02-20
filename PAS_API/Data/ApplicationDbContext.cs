@@ -20,5 +20,6 @@ namespace PAS_API.Data
         public DbSet<Customer> tblM_Customer { get; set; }
         public DbSet<CustomerAddress> tblT_CustomerAddress { get; set; }
         public DbSet<CustomerCommunication> tblT_CustomerCommunication { get; set; }
+        public DbSet<AdminUnitPengalihan> tblT_AdminUnitPengalihan { get; set; }
     }
 }

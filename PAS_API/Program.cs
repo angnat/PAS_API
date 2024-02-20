@@ -25,6 +25,7 @@ builder.Services.AddScoped<ICustomerAddressRepository, CustomerAddressRepository
 builder.Services.AddScoped<ICustomerCommunicationRepository, CustomerCommunicationRepository>();
 builder.Services.AddScoped<IAdminUnitTeknikSilverRepository, AdminUnitTeknikSilverRepository>();
 builder.Services.AddScoped<IAdminUnitPengalihanListHutangRepository, AdminUnitPengalihanListHutangRepository>();
+builder.Services.AddScoped<IAdminUnitPengalihanRepository, AdminUnitPengalihanRepository>();
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddControllers(option => {
@@ -54,7 +55,6 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 //}
-//app.UseCors("SiteCorsPolicy");
 
 app.UseHttpsRedirection();
 
