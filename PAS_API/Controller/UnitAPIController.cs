@@ -128,16 +128,22 @@ namespace PAS_API.Controller
                             long? projID = existingProject.ID;
                             //projectnya ada maka dia akan insert clusternya , cek dulu Clusternya   
 
-                            var existingCluster = await _dbCluster.GetAsync(u => u.FIDProject == projID);
-                            var newCluster = new Cluster
+                            var existingCluster = await _dbCluster.GetAsync(u => u.FIDProject == projID && u.SLoc == existingUnit.SLoc);
+                            if(existingCluster == null)
                             {
-                                FIDProject = projID,
-                                SLoc = existingUnit.SLoc,
-                                ClusterName = existingUnit.SLocDescription
-                            };
-
-                            await _dbCluster.CreateAsync(newCluster);
-                            existingUnit.FIDCluster = newCluster.ID;// Update the FIDCluster value                            
+                                var newCluster = new Cluster
+                                {
+                                    FIDProject = projID,
+                                    SLoc = existingUnit.SLoc,
+                                    ClusterName = existingUnit.SLocDescription
+                                };
+                                await _dbCluster.CreateAsync(newCluster);
+                                existingUnit.FIDCluster = newCluster.ID;// Update the FIDCluster value      
+                            }
+                            else
+                            {
+                                existingUnit.FIDCluster = existingCluster.ID;
+                            }                                                                          
                         }
 
                         await _dbUnit.UpdateAsync(existingUnit);
