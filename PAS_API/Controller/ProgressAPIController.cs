@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using PAS_API.Logging;
 using PAS_API.Model;
 using PAS_API.Model.DTO;
 using PAS_API.Repository.IRepository;
-
+using Serilog;
+using System.Net;
+using System.Text.Json;
 
 namespace PAS_API.Controller
 {
@@ -15,12 +18,14 @@ namespace PAS_API.Controller
         protected APIResponse _response;
         private readonly IProgressRepository _db_Progress;     
         private readonly IMapper _mapper;
-        public ProgressAPIController(IProgressRepository db_Progress, IMapper mapper)
+        private readonly ILogging _logger;
+        public ProgressAPIController(IProgressRepository db_Progress, IMapper mapper, ILogging logger)
         {
             _db_Progress = db_Progress;
             _mapper = mapper;
             this._response = new();
-           // _dbUnit = dbUnit;
+            _logger = logger;
+            // _dbUnit = dbUnit;
         }
 
 
@@ -64,21 +69,32 @@ namespace PAS_API.Controller
             try
             {
                 if (createDTO == null) return BadRequest();
+                string ip = Response.HttpContext.Connection.RemoteIpAddress.ToString();
+                if(ip == "::1")
+                {
+                    ip = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString();
+                }
+               
                 for (int i = 0; i < createDTO.Length; i++)
                 {
+                    string strJson = JsonSerializer.Serialize<CreateProgressDTO>(createDTO[i]);
                     var existingProgress = await _db_Progress.GetAsync(u => u.UnitID.ToLower() == createDTO[i].UnitID.ToLower());
                     if (existingProgress != null)
                     {
-                        // If the progress with the same UnitID exists, update the existing progress
+                        // If the progress with the same UnitID exists, update the existing progress                      
+                        createDTO[i].ModifiedHost = ip;
+                        _logger.Log("UPDATE","INFORMATION");                                          
+                        _logger.Log(strJson.ToString(), "INFORMATION");
+                        Log.Information("Parameter: " + strJson);
                         _mapper.Map(createDTO[i], existingProgress); // Update the existing progress with the new values
                         await _db_Progress.UpdateAsync(existingProgress);
-                        //_response.Result = _mapper.Map<ProgressDTO>(existingProgress);
+                        Log.Information("Status: " + "S");                    
                     }
                     else
-                    {                      
+                    {
+                        createDTO[i].CreatedHost = ip;
                         Progress progress = _mapper.Map<Progress>(createDTO[i]);
-                        await _db_Progress.CreateAsync(progress);
-                        //_response.Result = _mapper.Map<ProgressDTO>(progress);
+                        await _db_Progress.CreateAsync(progress);                     
                     }
                 }
                

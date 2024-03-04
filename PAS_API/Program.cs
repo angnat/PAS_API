@@ -4,6 +4,8 @@ using PAS_API.Repository.IRepository;
 using PAS_API.Repository;
 using PAS_API;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Serilog;
+using PAS_API.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(option => {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
 
+Log.Logger = new LoggerConfiguration().MinimumLevel.Information()
+    .WriteTo.File("log/pasapiLog.txt",rollingInterval:RollingInterval.Month).CreateLogger();
 
+builder.Host.UseSerilog();
 builder.Services.AddScoped<IUnitRepository, UnitRepository>();
 builder.Services.AddScoped<ITUnitRepository, TUnitRepository>();
 builder.Services.AddScoped<IAdminUnitTeknikRepository, AdminUnitTeknikRepository>();
@@ -26,6 +31,14 @@ builder.Services.AddScoped<ICustomerCommunicationRepository, CustomerCommunicati
 builder.Services.AddScoped<IAdminUnitTeknikSilverRepository, AdminUnitTeknikSilverRepository>();
 builder.Services.AddScoped<IAdminUnitPengalihanListHutangRepository, AdminUnitPengalihanListHutangRepository>();
 builder.Services.AddScoped<IAdminUnitPengalihanRepository, AdminUnitPengalihanRepository>();
+builder.Services.AddSingleton<ILogging, Logging>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor |
+    Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+});
+
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddControllers(option => {
@@ -55,7 +68,7 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 //}
-
+app.UseForwardedHeaders();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
