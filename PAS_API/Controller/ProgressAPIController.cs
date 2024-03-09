@@ -87,8 +87,7 @@ namespace PAS_API.Controller
                         _logger.Log(strJson.ToString(), "INFORMATION");
                         Log.Information("Parameter: " + strJson);
                         _mapper.Map(createDTO[i], existingProgress); // Update the existing progress with the new values
-                        await _db_Progress.UpdateAsync(existingProgress);
-                        Log.Information("Status: " + "S");                    
+                        await _db_Progress.UpdateAsync(existingProgress);                               
                     }
                     else
                     {
@@ -100,6 +99,7 @@ namespace PAS_API.Controller
                
                 _response.StatusCode = System.Net.HttpStatusCode.Created;
                 _response.IsSuccess = true;
+                Log.Information("Status: " + _response);
 
                 return Ok(_response);
             }
@@ -107,6 +107,7 @@ namespace PAS_API.Controller
             {
                 _response.IsSuccess = false;
                 _response.ErrorsMessage = new List<string>() { ex.ToString() };
+                Log.Error("Error: " + _response);
             }
             return _response;
         }
