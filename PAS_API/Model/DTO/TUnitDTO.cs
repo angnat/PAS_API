@@ -80,5 +80,19 @@
         { get; set; }
         public UnitDTO? Unit
         { get; set; }
+        public string CreatedBy
+        { get; set; }
+        public DateTime? CreatedDate
+        { get; set; }
+        public string CreatedHost
+        { get; set; }
+        public string ModifiedBy
+        { get; set; }
+        public DateTime? ModifiedDate
+        { get; set; }
+        public string ModifiedHost
+        { get; set; }
+        public string? HistoryData
+        { get; set; }
     }
 }
