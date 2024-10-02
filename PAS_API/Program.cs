@@ -31,6 +31,7 @@ builder.Services.AddScoped<ICustomerCommunicationRepository, CustomerCommunicati
 builder.Services.AddScoped<IAdminUnitTeknikSilverRepository, AdminUnitTeknikSilverRepository>();
 builder.Services.AddScoped<IAdminUnitPengalihanListHutangRepository, AdminUnitPengalihanListHutangRepository>();
 builder.Services.AddScoped<IAdminUnitPengalihanRepository, AdminUnitPengalihanRepository>();
+builder.Services.AddScoped<IVwAdminUnitReportAPIRepository, VwAdminUnitReportAPIRepository>();
 builder.Services.AddSingleton<ILogging, Logging>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -50,10 +51,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 /*Untuk di Prod
-
+builder.WebHost.UseUrls("http://0.0.0.0:5001/");
 */
 
-builder.WebHost.UseUrls("http://0.0.0.0:5001/");
+
 
 /* Untuk DEV jalan swagger UI 
 
