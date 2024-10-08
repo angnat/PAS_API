@@ -49,7 +49,7 @@ namespace PAS_API.Model
         { get; set; }
         public decimal? LuasBangunan
         { get; set; }
-        public decimal? LuasNet
+        public string? LuasNet
         { get; set; }
         public string? NamaCustomer
         { get; set; }
@@ -80,6 +80,22 @@ namespace PAS_API.Model
         public DateTime? TglLunas
         { get; set; }
         public DateTime? TglValidTeknik
+        { get; set; }
+        public string? VTPM_Building_CreatedBy
+        { get; set; }
+        public string? VTPM_Building_CreatedDate
+        { get; set; }
+        public string? VTQA_Building_CreatedBy
+        { get; set; }
+        public string? VTQA_Building_CreatedDate
+        { get; set; }
+        public string? VTPM_Furniture_CreatedBy
+        { get; set; }
+        public string? VTPM_Furniture_CreatedDate
+        { get; set; }
+        public string? VTQA_Furniture_CreatedBy
+        { get; set; }
+        public string? VTQA_Furniture_CreatedDate
         { get; set; }
     }
 }
