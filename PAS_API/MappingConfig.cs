@@ -28,6 +28,7 @@ namespace PAS_API
             CreateMap<AdminUnitPengalihanListHutang, CreateAdminUnitPengalihanListHutangDTO>().ReverseMap();
             CreateMap<AdminUnitPengalihan, AdminUnitPengalihanDTO>().ReverseMap();
             CreateMap<vw_AdminUnitReportAPI, vw_AdminUnitReportAPIDTO>().ReverseMap();
+            //CreateMap<vw_AdminUnitReportAPI, vw_AdminUnitReportAPIDTO>().ReverseMap();
         }
     }
 }

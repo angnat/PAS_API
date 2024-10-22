@@ -22,5 +22,6 @@ namespace PAS_API.Data
         public DbSet<CustomerCommunication> tblT_CustomerCommunication { get; set; }
         public DbSet<AdminUnitPengalihan> tblT_AdminUnitPengalihan { get; set; }
         public DbSet<vw_AdminUnitReportAPI> vw_AdminUnitReportAPI { get; set; }
+        public DbSet<vw_Company_Header> vw_Company_Header { get; set; }
     }
 }

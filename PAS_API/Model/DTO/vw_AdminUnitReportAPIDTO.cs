@@ -72,7 +72,7 @@
         { get; set; }
         public decimal? OutstandingDenda
         { get; set; }
-        public DateTime? TglLunas
+        public DateTime? tanggal_validasi_finance
         { get; set; }
         public DateTime? TglValidTeknik
         { get; set; }
@@ -91,6 +91,12 @@
         public string? VTQA_Furniture_CreatedBy
         { get; set; }
         public string? VTQA_Furniture_CreatedDate
+        { get; set; }
+        public string? NoSPK
+        { get; set; }
+        public DateTime? TglSPK
+        { get; set; }
+        public string? NamaKontraktor
         { get; set; }
 
     }

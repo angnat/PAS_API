@@ -32,6 +32,7 @@ builder.Services.AddScoped<IAdminUnitTeknikSilverRepository, AdminUnitTeknikSilv
 builder.Services.AddScoped<IAdminUnitPengalihanListHutangRepository, AdminUnitPengalihanListHutangRepository>();
 builder.Services.AddScoped<IAdminUnitPengalihanRepository, AdminUnitPengalihanRepository>();
 builder.Services.AddScoped<IVwAdminUnitReportAPIRepository, VwAdminUnitReportAPIRepository>();
+builder.Services.AddScoped<IVwReportCompanyAPIRepository, VwReportCompanyAPIRepository>();
 builder.Services.AddSingleton<ILogging, Logging>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>

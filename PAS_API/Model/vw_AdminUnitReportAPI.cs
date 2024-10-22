@@ -77,7 +77,7 @@ namespace PAS_API.Model
         { get; set; }
         public decimal? OutstandingDenda
         { get; set; }
-        public DateTime? TglLunas
+        public DateTime? tanggal_validasi_finance
         { get; set; }
         public DateTime? TglValidTeknik
         { get; set; }
@@ -96,6 +96,20 @@ namespace PAS_API.Model
         public string? VTQA_Furniture_CreatedBy
         { get; set; }
         public string? VTQA_Furniture_CreatedDate
+        { get; set; }
+        public string? NoSPK
+        { get; set; }
+        public DateTime? TglSPK
+        { get; set; }
+        public string? NamaKontraktor
+        { get; set; }
+        public string? LunasFlag
+        { get; set; }
+        public bool? ReadyFlag
+        { get; set; }
+        public bool? SerahTerimaAwal
+        { get; set; }
+        public bool? SerahTerimaOtomatis
         { get; set; }
     }
 }
